@@ -1,0 +1,10 @@
+{
+  "duration":24.6,
+  "assertions":[
+    {"kind":"appearsBy","selector":".burst-title","bySec":0},
+    {"kind":"appearsBy","selector":".proof-stamp","bySec":14.2},
+    {"kind":"appearsBy","selector":".finish-cta","bySec":21.3},
+    {"kind":"before","a":"#proof-stock-before","b":"#proof-stock-after"},
+    {"kind":"keepsMoving","maxStaticSec":3}
+  ]
+}

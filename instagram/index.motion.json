@@ -1,0 +1,11 @@
+{
+  "duration": 25,
+  "assertions": [
+    {"kind":"appearsBy","selector":".ch-title","bySec":0},
+    {"kind":"appearsBy","selector":".av-number","bySec":6.8},
+    {"kind":"appearsBy","selector":".st-new","bySec":14.8},
+    {"kind":"appearsBy","selector":".en-cta","bySec":23},
+    {"kind":"before","a":".sa-confirm","b":".st-new"},
+    {"kind":"keepsMoving","maxStaticSec":3.2}
+  ]
+}

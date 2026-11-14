@@ -1,0 +1,10 @@
+<svg id="board-c-drawing" class="drawing" viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg" aria-label="Original illustration of a shop and its runaway receipt" role="img"><g transform="translate(540 1030) scale(2.9)"><g id="bc-printer" stroke="#1b2520" stroke-width="5.5" stroke-linejoin="round" stroke-linecap="round">
+  <path d="M-116 -60 L96 -60 L132 -16 L132 94 L-116 94Z" fill="#153e30"/>
+  <path d="M-116 -60 L-85 -112 L69 -112 L96 -60Z" fill="#27755d"/>
+  <rect x="-116" y="-60" width="212" height="154" rx="17" fill="#27755d"/>
+  <rect x="-91" y="-25" width="164" height="32" rx="6" fill="#1b2520"/>
+  <path d="M-74 -10 H57" stroke="#fffdf7" stroke-width="4"/>
+  <circle cx="68" cy="-77" r="7" fill="#d9ed9c" stroke="none"/>
+  <path d="M-86 49 H-37 M-86 62 H-37 M-86 75 H-37" stroke="#153e30" stroke-width="5"/>
+  <rect x="29" y="40" width="42" height="27" rx="6" fill="#d9ed9c"/>
+ </g><g transform="translate(-72 -258)"><g id="bc-receipt"><path d="M0 0 H142 V231 l-7.1 12 l-7.1 -12 l-7.1 12 l-7.1 -12 l-7.1 12 l-7.1 -12 l-7.1 12 l-7.1 -12 l-7.1 12 l-7.1 -12 l-7.1 12 l-7.1 -12 l-7.1 12 l-7.1 -12 l-7.1 12 l-7.1 -12 l-7.1 12 l-7.1 -12 l-7.1 12 l-7.1 -12 Z" fill="#fffdf7" stroke="#1b2520" stroke-width="5.5" stroke-linejoin="round" stroke-linecap="round"/><path d="M22 32 H120" stroke="#1b2520" stroke-width="9"/><path d="M22 55 H105 M22 80 H120 M22 100 H97 M22 175 H120" stroke="#1b2520" stroke-width="4"/><path d="M22 200 H100" stroke="#27755d" stroke-width="10"/></g></g></g></svg>

@@ -1,0 +1,15 @@
+{
+  "status": "measured_117_bpm_frame_rounded_edit",
+  "fps": 30,
+  "artistBpm": 117,
+  "cutsFrames": [0, 62, 246, 369, 492, 615, 738],
+  "sceneIds": ["burst", "avalanche", "control", "proof", "payoff", "finish"],
+  "measuredBpm": 117,
+  "sourceOnset": 0.025,
+  "sourceSectionChange": 16.445,
+  "musicFile": "assets/music/music-cut.wav",
+  "musicOffset": 0,
+  "sourceFile": "assets/music/electro-cabello.mp3",
+  "musicEdit": [{"from":0.025,"duration":8.2},{"from":16.445,"duration":16.4}],
+  "rounding": "round(fps * beatIndex * 60 / 117), computed independently for every cut"
+}

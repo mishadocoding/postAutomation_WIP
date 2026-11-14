@@ -1,0 +1,37 @@
+<template>
+<style>
+@font-face{font-family:'Receipt Sans';src:url('assets/fonts/Inter-700.woff2') format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:'Receipt Sans';src:url('assets/fonts/Inter-400.woff2') format('woff2');font-weight:400;font-display:swap}
+#root{position:absolute;inset:0;background:#fffdf7;color:#1b2520;font-family:'Receipt Sans',Inter,sans-serif;overflow:hidden}
+.drawing{position:absolute;inset:0;width:1080px;height:1920px;overflow:visible}
+.headline{position:absolute;left:90px;top:226px;margin:0;font-family:'League Gothic';font-size:146px;font-weight:400;line-height:.96;letter-spacing:-1px;z-index:2}
+.support{position:absolute;left:94px;font-size:34px;line-height:1.3;margin:0;font-weight:700}
+.world{position:absolute;inset:0}
+
+#root{background:#f3693b}.bu-camera{position:absolute;inset:0;transform-origin:540px 947.525px;z-index:3}.burst-title{font-size:154px}
+</style>
+<div id="root" data-composition-id="burst" data-width="1080" data-height="1920">
+<div id="burst-clip" class="clip" data-start="0" data-duration="2.066666666666667" data-track-index="0" data-beat="burst">
+<h1 class="headline burst-title">RUNNING<br>A SHOP?</h1>
+<div class="bu-camera" data-layout-allow-overflow data-layout-allow-occlusion><svg id="bu-drawing" class="drawing" viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg" aria-label="Original illustration of a shop and its runaway receipt" role="img"><g transform="translate(540 1070) scale(2.3)"><g class="bu-machine"><g id="bu-printer" stroke="#1b2520" stroke-width="5.5" stroke-linejoin="round" stroke-linecap="round">
+  <path d="M-116 -60 L96 -60 L132 -16 L132 94 L-116 94Z" fill="#153e30"/>
+  <path d="M-116 -60 L-85 -112 L69 -112 L96 -60Z" fill="#27755d"/>
+  <rect x="-116" y="-60" width="212" height="154" rx="17" fill="#27755d"/>
+  <rect x="-91" y="-25" width="164" height="32" rx="6" fill="#1b2520"/>
+  <path d="M-74 -10 H57" stroke="#fffdf7" stroke-width="4"/>
+  <circle cx="68" cy="-77" r="7" fill="#d9ed9c" stroke="none"/>
+  <path d="M-86 49 H-37 M-86 62 H-37 M-86 75 H-37" stroke="#153e30" stroke-width="5"/>
+  <rect x="29" y="40" width="42" height="27" rx="6" fill="#d9ed9c"/>
+ </g><defs><clipPath id="bu-slot-mask"><rect x="-85" y="-250" width="170" height="240"/></clipPath></defs><g clip-path="url(#bu-slot-mask)"><g class="bu-feed"><g id="bu-printer-paper" stroke="#1b2520" stroke-width="5.5" stroke-linejoin="round" stroke-linecap="round"><path d="M-72 -10 V-192 l7.1 -12 l7.1 12 l7.1 -12 l7.1 12 l7.1 -12 l7.1 12 l7.1 -12 l7.1 12 l7.1 -12 l7.1 12 l7.1 -12 l7.1 12 l7.1 -12 l7.1 12 l7.1 -12 l7.1 12 l7.1 -12 l7.1 12 l7.1 -12 l7.1 12 V-10Z" fill="#fffdf7"/><path d="M-50 -168 H46" stroke-width="8"/><path d="M-50 -145 H35 M-50 -124 H46 M-50 -103 H17 M-50 -65 H46" stroke-width="4"/><path d="M-50 -39 H25" stroke="#27755d" stroke-width="9"/></g></g></g><path d="M-88 -9 H69" stroke="#1b2520" stroke-width="6" stroke-linecap="round"/></g></g></svg></div>
+</div>
+</div>
+<script>
+const tl=gsap.timeline({paused:true});
+tl.fromTo('.bu-feed',{y:142},{y:0,duration:.48,ease:'power4.out'},.12);
+tl.fromTo('.bu-machine',{rotation:-2},{rotation:0,duration:.24,ease:'back.out(1.6)',svgOrigin:'0 70'},.05);
+tl.to('.bu-feed',{y:-15,duration:.12,ease:'power2.in'},.68);
+tl.to('.bu-feed',{y:0,duration:.2,ease:'power3.out'},.8);
+tl.to('.bu-camera',{scale:50,y:12.475,duration:.42,ease:'power3.in'},1.646666666666667);
+window.__timelines["burst"]=tl;
+</script>
+</template>

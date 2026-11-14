@@ -1,0 +1,33 @@
+# Credentials stay on the machine running the worker.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+auth.json
+
+# Worker databases, generated jobs, browser profiles and private diagnostics.
+.state/
+__pycache__/
+*.py[cod]
+*.sqlite3
+*.sqlite3-*
+*.log
+
+# Reproducible dependencies and HyperFrames local caches/history.
+node_modules/
+.hyperframes/
+.thumbnails/
+.waveform-cache/
+.media/
+*-report.json
+*-frames.txt
+snapshot-report.txt
+
+# Editor and OS files.
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini

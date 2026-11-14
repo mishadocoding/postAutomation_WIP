@@ -1,0 +1,3 @@
+Circuit Market: stock, orders, and fulfillment in one workspace.
+
+SampleERP product demonstration.

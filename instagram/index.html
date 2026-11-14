@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait" data-composition-variables='[{"id":"brand","type":"string","label":"Brand name","default":"Circuit Market"},{"id":"tagline","type":"string","label":"End card line","default":"Everything connected"},{"id":"cta","type":"string","label":"Call to action","default":"Explore the demo"},{"id":"accent","type":"color","label":"Brand green","default":"#27755d"}]'>
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=1080, height=1920"><title>Circuit Market — One sale, brought together</title>
+<script src="assets/vendor/gsap.min.js"></script>
+<style>
+@font-face{font-family:'Promo Inter';src:url('assets/fonts/Inter-400.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'Promo Inter';src:url('assets/fonts/Inter-700.woff2') format('woff2');font-weight:700;font-display:swap}
+*{box-sizing:border-box}html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#f7f9f8;color:#202a29;font-family:'Promo Inter',Inter,sans-serif}#root{position:absolute;inset:0}.clip{position:absolute;inset:0}
+</style>
+</head><body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="25" data-fps="30" data-width="1080" data-height="1920">
+<div id="chaos" class="clip" data-composition-id="chaos" data-composition-src="compositions/chaos.html" data-start="0" data-duration="3" data-track-index="1" data-track-kind="graphics" data-width="1080" data-height="1920"></div>
+<div id="workspace" class="clip" data-composition-id="workspace" data-composition-src="compositions/workspace.html" data-start="3" data-duration="3" data-track-index="1" data-track-kind="graphics" data-width="1080" data-height="1920"></div>
+<div id="available" class="clip" data-composition-id="available" data-composition-src="compositions/available.html" data-start="6" data-duration="3" data-track-index="1" data-track-kind="graphics" data-width="1080" data-height="1920"></div>
+<div id="sale" class="clip" data-composition-id="sale" data-composition-src="compositions/sale.html" data-start="9" data-duration="4" data-track-index="1" data-track-kind="graphics" data-width="1080" data-height="1920"></div>
+<div id="stock" class="clip" data-composition-id="stock" data-composition-src="compositions/stock.html" data-start="13" data-duration="4" data-track-index="1" data-track-kind="graphics" data-width="1080" data-height="1920"></div>
+<div id="fulfill" class="clip" data-composition-id="fulfill" data-composition-src="compositions/fulfill.html" data-start="17" data-duration="5" data-track-index="1" data-track-kind="graphics" data-width="1080" data-height="1920"></div>
+<div id="endcard" class="clip" data-composition-id="endcard" data-composition-src="compositions/endcard.html" data-start="22" data-duration="3" data-track-index="1" data-track-kind="graphics" data-width="1080" data-height="1920"></div>
+<audio id="gather-sound" class="clip" src="assets/sfx/whoosh-short.mp3" data-start="2.66" data-duration="0.34" data-volume="0.45" data-track-index="3"></audio>
+<audio id="product-sound" class="clip" src="assets/sfx/pop.mp3" data-start="6.22" data-duration="0.5" data-volume="0.28" data-track-index="3"></audio>
+<audio id="order-click" class="clip" src="assets/sfx/click-soft.mp3" data-start="11.88" data-duration="0.3" data-volume="0.65" data-track-index="3"></audio>
+<audio id="stock-sound" class="clip" src="assets/sfx/pop.mp3" data-start="14.19" data-duration="0.5" data-volume="0.33" data-track-index="3"></audio>
+<audio id="shipped-click" class="clip" src="assets/sfx/click-soft.mp3" data-start="18.19" data-duration="0.3" data-volume="0.5" data-track-index="3"></audio>
+<audio id="completed-click" class="clip" src="assets/sfx/click-soft.mp3" data-start="19.29" data-duration="0.3" data-volume="0.55" data-track-index="3"></audio>
+<audio id="return-sound" class="clip" src="assets/sfx/whoosh-short.mp3" data-start="20.3" data-duration="0.4" data-volume="0.35" data-track-index="3"></audio>
+<audio id="brand-impact" class="clip" src="assets/sfx/impact-bass-1.mp3" data-start="22.13" data-duration="0.8" data-volume="0.32" data-fade-out="0.25" data-track-index="3"></audio>
+</div>
+<script>window.__timelines=window.__timelines||{};window.__timelines.main=gsap.timeline({paused:true});</script>
+</body></html>

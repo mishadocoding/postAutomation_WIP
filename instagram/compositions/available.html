@@ -1,0 +1,15 @@
+<template>
+<style>
+#root{position:absolute;inset:0;background:#f7f9f8;color:#202a29;font-family:'Promo Inter',Inter,sans-serif;overflow:hidden}
+.av-title{position:absolute;left:90px;top:255px;margin:0;font-size:94px;line-height:1.07;letter-spacing:-4px;font-weight:700}.av-panel{position:absolute;left:90px;top:570px;width:840px;height:325px;border-radius:18px;background:white;overflow:hidden;box-shadow:0 20px 55px #202a2910}.av-panel img{width:840px;display:block}.av-number{position:absolute;left:90px;top:922px;margin:0;font-size:220px;font-weight:700;line-height:1;letter-spacing:-12px;color:#27755d}.av-label{position:absolute;left:410px;top:960px;margin:0;font-size:42px;line-height:1.2;letter-spacing:-1px}.av-note{position:absolute;left:94px;top:1210px;margin:0;font-size:30px;color:#52675d}.av-ground{position:absolute;left:0;top:1470px;width:1080px;height:450px;background:#e3ece6}
+</style>
+<div id="root" data-composition-id="available" data-width="1080" data-height="1920"><div id="av-clip" class="clip" data-start="0" data-duration="3" data-beat="available-stock" data-track-index="0"><div class="av-ground" data-layout-ignore></div><h1 class="av-title">Start with<br>what’s in stock</h1><div class="av-panel" data-layout-allow-overflow><img src="assets/product/stock-before.png" alt="Real MacBook Air M3 details: 24 available"></div><p class="av-number">24</p><p class="av-label">units available<br>MacBook Air M3</p><p class="av-note">CM-1001 · Demo stock</p></div></div>
+<script>
+const tl=gsap.timeline({paused:true});
+tl.fromTo('.av-title',{x:70,opacity:1},{x:0,opacity:1,duration:0.4,ease:'power4.out'},0);
+tl.fromTo('.av-panel',{scale:1.1,opacity:0},{scale:1,opacity:1,duration:0.45,ease:'power3.out'},0.08);
+tl.fromTo('.av-number',{y:55,opacity:0},{y:0,opacity:1,duration:0.38,ease:'back.out(1.15)'},0.22);
+tl.fromTo('.av-label',{x:30,opacity:0},{x:0,opacity:1,duration:0.3,ease:'power3.out'},0.38);
+tl.fromTo('.av-note',{opacity:0},{opacity:1,duration:0.2},0.5);
+window.__timelines.available=tl;
+</script></template>

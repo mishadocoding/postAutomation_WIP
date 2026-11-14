@@ -1,0 +1,18 @@
+<template>
+<style>
+#root{position:absolute;inset:0;background:#f7f9f8;color:#202a29;font-family:'Promo Inter',Inter,sans-serif;overflow:hidden}
+.st-title{position:absolute;left:90px;top:250px;margin:0;font-size:94px;line-height:1.07;letter-spacing:-4px;font-weight:700}.st-counter{position:absolute;left:90px;top:550px;width:840px;height:260px}.st-old,.st-new{position:absolute;margin:0;font-size:224px;font-weight:700;line-height:1;letter-spacing:-14px}.st-old{left:0;color:#64756c}.st-new{left:525px;color:#27755d}.st-arrow{position:absolute;left:337px;top:56px;font-size:114px;color:#27755d}.st-strike{position:absolute;left:6px;top:112px;width:263px;height:7px;background:#202a29;transform-origin:left}.st-math{position:absolute;left:95px;top:830px;font-size:34px;margin:0;color:#52675d}.st-panel{position:absolute;left:90px;top:945px;width:840px;height:325px;border-radius:18px;background:white;overflow:hidden;box-shadow:0 20px 50px #202a2910}.st-panel img{position:absolute;inset:0;width:840px;height:auto;display:block}.st-bottom{position:absolute;left:-100px;top:1520px;width:1280px;height:600px;background:#dce9df;transform:rotate(12deg)}
+</style>
+<div id="root" data-composition-id="stock" data-width="1080" data-height="1920"><div id="st-clip" class="clip" data-start="0" data-duration="4" data-beat="stock-deducted" data-track-index="0"><div class="st-bottom" data-layout-ignore></div><h1 class="st-title">Stock follows<br>the sale</h1><div class="st-counter"><p class="st-old">24</p><span class="st-arrow">→</span><p class="st-new">23</p><div class="st-strike" data-layout-ignore></div></div><p class="st-math">One sold · CM-1001 · Demo stock</p><div class="st-panel" data-layout-allow-overflow><img class="st-before" src="assets/product/stock-before.png" alt="Actual stock before the order: 24"><img class="st-after" src="assets/product/stock-after.png" alt="Actual stock after the order: 23"></div></div></div>
+<script>
+const tl=gsap.timeline({paused:true});
+tl.fromTo('.st-title',{y:-45,opacity:1},{y:0,opacity:1,duration:0.36,ease:'power4.out'},0);
+tl.fromTo('.st-old',{scale:1.12,opacity:0},{scale:1,opacity:1,duration:0.4,ease:'power3.out'},0.12);
+tl.fromTo('.st-panel',{y:45,opacity:0},{y:0,opacity:1,duration:0.42,ease:'power4.out'},0.15);
+tl.fromTo('.st-arrow',{x:-30,opacity:0},{x:0,opacity:1,duration:0.27,ease:'power3.out'},0.9);
+tl.fromTo('.st-new',{y:80,opacity:0},{y:0,opacity:1,duration:0.4,ease:'back.out(1.15)'},1.15);
+tl.fromTo('.st-strike',{scaleX:0},{scaleX:1,duration:0.28,ease:'power3.inOut'},1.15);
+tl.fromTo('.st-after',{opacity:0},{opacity:1,duration:0.1},1.15);
+tl.fromTo('.st-math',{opacity:0},{opacity:1,duration:0.22},1.48);
+window.__timelines.stock=tl;
+</script></template>

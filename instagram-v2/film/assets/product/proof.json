@@ -1,0 +1,19 @@
+{
+  "source": "../../../SampleERP/index.html",
+  "isolated": true,
+  "before": 24,
+  "after": 23,
+  "order": {
+    "customer": "Demo Customer",
+    "product": "CM-1001",
+    "qty": 1,
+    "channel": "Online",
+    "id": "ORD-2049",
+    "total": 1099,
+    "costTotal": 850,
+    "date": "2026-11-12",
+    "status": "Processing"
+  },
+  "finalStatus": "Completed",
+  "focusBlurred": true
+}

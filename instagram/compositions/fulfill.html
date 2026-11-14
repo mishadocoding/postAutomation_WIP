@@ -1,0 +1,24 @@
+<template>
+<style>
+#root{position:absolute;inset:0;background:#e5eee8;color:#202a29;font-family:'Promo Inter',Inter,sans-serif;overflow:hidden}
+.fu-title{position:absolute;left:90px;top:245px;font-size:94px;line-height:1.05;letter-spacing:-4px;margin:0;font-weight:700}.fu-flow{position:absolute;left:94px;top:505px;width:836px}.fu-state{height:91px;display:flex;align-items:center;gap:28px;font-size:57px;font-weight:700;letter-spacing:-2px}.fu-dot{display:block;width:28px;height:28px;border:4px solid #52675d;border-radius:50%;flex-shrink:0}.fu-panel{position:absolute;left:90px;top:835px;width:840px;height:438px;border-radius:18px;overflow:hidden;box-shadow:0 22px 50px #202a2912;background:white}.fu-panel img{position:absolute;inset:0;width:840px;height:auto;display:block}.fu-return{position:absolute;left:90px;top:630px;width:840px;height:642px;border-radius:16px;background:white;overflow:hidden;box-shadow:0 20px 60px #202a2914}.fu-return img{width:840px;height:auto;display:block}.fu-return-title{position:absolute;left:90px;top:280px;margin:0;font-size:92px;line-height:1.07;letter-spacing:-4px;font-weight:700}.fu-wipe{position:absolute;inset:0;background:#27755d;transform-origin:left}.fu-ground{position:absolute;inset:1470px 0 0;background:#cbded1}
+</style>
+<div id="root" data-composition-id="fulfill" data-width="1080" data-height="1920"><div id="fu-clip" class="clip" data-start="0" data-duration="5" data-beat="fulfillment" data-track-index="0"><div class="fu-ground" data-layout-ignore></div><div class="fu-detail"><h1 class="fu-title">Follow it<br>through</h1><div class="fu-flow"><div class="fu-state fu-processing"><span class="fu-dot"></span>Processing</div><div class="fu-state fu-shipped"><span class="fu-dot"></span>Shipped</div><div class="fu-state fu-completed"><span class="fu-dot"></span>Completed</div></div><div class="fu-panel" data-layout-allow-overflow><img src="assets/product/processing.png" alt="Actual demo order in Processing"><img class="fu-ship" src="assets/product/shipped.png" alt="Actual demo order marked Shipped"><img class="fu-complete" src="assets/product/completed.png" alt="Actual demo order marked Completed"></div></div><div class="fu-context"><h1 class="fu-return-title">One workspace.<br>All connected.</h1><div class="fu-return"><img src="assets/product/workspace-result.png" alt="Completed order back in the actual Circuit Market orders workspace"></div></div><div class="fu-wipe" data-layout-ignore></div></div></div>
+<script>
+const tl=gsap.timeline({paused:true});
+tl.fromTo('.fu-title',{x:-50,opacity:1},{x:0,opacity:1,duration:0.35,ease:'power4.out'},0);
+tl.fromTo('.fu-panel',{scale:0.94,opacity:0},{scale:1,opacity:1,duration:0.38,ease:'power4.out'},0.1);
+tl.fromTo('.fu-processing',{x:-30,opacity:0},{x:0,opacity:1,duration:0.3,ease:'power3.out'},0.12);
+tl.fromTo('.fu-shipped',{x:-30,opacity:0},{x:0,opacity:1,duration:0.3,ease:'power3.out'},1.15);
+tl.fromTo('.fu-completed',{x:-30,opacity:0},{x:0,opacity:1,duration:0.3,ease:'power3.out'},2.25);
+tl.fromTo('.fu-processing .fu-dot',{backgroundColor:'#e5eee8',borderColor:'#52675d'},{backgroundColor:'#27755d',borderColor:'#27755d',duration:0.2},0.12);
+tl.fromTo('.fu-shipped .fu-dot',{backgroundColor:'#e5eee8',borderColor:'#52675d'},{backgroundColor:'#27755d',borderColor:'#27755d',duration:0.2},1.15);
+tl.fromTo('.fu-completed .fu-dot',{backgroundColor:'#e5eee8',borderColor:'#52675d'},{backgroundColor:'#27755d',borderColor:'#27755d',duration:0.2},2.25);
+tl.fromTo('.fu-ship',{opacity:0},{opacity:1,duration:0.1},1.15);
+tl.fromTo('.fu-complete',{opacity:0},{opacity:1,duration:0.1},2.25);
+tl.fromTo('.fu-detail',{opacity:1},{opacity:0,duration:0.18},3.22);
+tl.fromTo('.fu-context',{opacity:0},{opacity:1,duration:0.22},3.3);
+tl.fromTo('.fu-return',{scale:1.12},{scale:1,duration:0.45,ease:'power4.out'},3.3);
+tl.fromTo('.fu-wipe',{scaleX:0},{scaleX:1,duration:0.3,ease:'power4.inOut'},4.7);
+window.__timelines.fulfill=tl;
+</script></template>

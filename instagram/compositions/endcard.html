@@ -1,0 +1,15 @@
+<template>
+<style>
+#root{position:absolute;inset:0;background:var(--accent,#27755d);color:white;font-family:'Promo Inter',Inter,sans-serif;overflow:hidden}
+.en-logo{position:absolute;left:90px;top:330px;width:126px;height:126px;border-radius:28px;background:#fff;padding:9px;overflow:hidden}.en-logo img{width:108px;height:108px;display:block}.en-brand{position:absolute;left:90px;top:510px;font-size:88px;letter-spacing:-4px;font-weight:700;line-height:1.08;margin:0;width:840px}.en-line{position:absolute;left:94px;top:680px;font-size:56px;font-weight:700;line-height:1.17;letter-spacing:-2px;margin:0}.en-cta{position:absolute;left:94px;top:968px;border-bottom:4px solid #d3f2aa;padding-bottom:17px;min-width:620px;font-size:42px;font-weight:700;letter-spacing:-1px;display:flex;gap:60px;align-items:center}.en-note{position:absolute;left:94px;top:1170px;font-size:29px;color:#e1f0e5;margin:0}.en-shape{position:absolute;left:450px;top:1490px;width:1100px;height:900px;background:#d3f2aa;transform:rotate(-20deg)}
+</style>
+<div id="root" data-composition-id="endcard" data-width="1080" data-height="1920"><div id="en-clip" class="clip" data-start="0" data-duration="3" data-beat="end-card" data-track-index="0" data-hold><div class="en-shape" data-layout-ignore></div><div class="en-logo"><img src="assets/product/logo.png" alt="Original Circuit Market logo"></div><h1 class="en-brand" data-var-text="brand">Circuit Market</h1><p class="en-line">One sale.<br><span data-var-text="tagline">Everything connected</span></p><div class="en-cta"><span data-var-text="cta">Explore the demo</span><span>↗</span></div><p class="en-note">SampleERP · Product demo</p></div></div>
+<script>
+const tl=gsap.timeline({paused:true});
+tl.fromTo('.en-logo',{scale:0.45,rotation:-18,opacity:0},{scale:1,rotation:0,opacity:1,duration:0.4,ease:'back.out(1.15)'},0);
+tl.fromTo('.en-brand',{x:65,opacity:0},{x:0,opacity:1,duration:0.35,ease:'power4.out'},0.12);
+tl.fromTo('.en-line',{opacity:0},{opacity:1,duration:0.25},0.27);
+tl.fromTo('.en-cta',{x:-40,opacity:0},{x:0,opacity:1,duration:0.32,ease:'power3.out'},0.4);
+tl.fromTo('.en-note',{opacity:0},{opacity:1,duration:0.2},0.5);
+window.__timelines.endcard=tl;
+</script></template>

@@ -1,0 +1,18 @@
+<template>
+<style>
+#root{position:absolute;inset:0;background:#e5eee8;color:#202a29;font-family:'Promo Inter',Inter,sans-serif;overflow:hidden}
+.sa-title{position:absolute;left:90px;top:245px;margin:0;font-size:99px;line-height:1.03;letter-spacing:-5px;font-weight:700}.sa-frame{position:absolute;left:90px;top:510px;width:840px;height:754px;background:white;border-radius:20px;box-shadow:0 24px 55px #202a2914;overflow:hidden}.sa-frame img{position:absolute;inset:0;width:840px;height:auto;display:block}.sa-ring{position:absolute;left:724px;top:1122px;width:150px;height:100px;border:5px solid #d3f2aa;border-radius:12px}.sa-cursor{position:absolute;left:770px;top:1165px;width:56px;height:65px;filter:drop-shadow(0 3px 2px #0003)}.sa-confirm{position:absolute;left:90px;top:1180px;width:840px;height:85px;background:#27755d;color:white;display:flex;align-items:center;padding-left:30px;font-size:38px;font-weight:700;letter-spacing:-1px}.sa-bottom{position:absolute;left:0;top:1520px;width:1080px;height:400px;background:#27755d}
+</style>
+<div id="root" data-composition-id="sale" data-width="1080" data-height="1920"><div id="sa-clip" class="clip" data-start="0" data-duration="4" data-beat="create-order" data-track-index="0"><div class="sa-bottom" data-layout-ignore></div><h1 class="sa-title">Create<br>one order</h1><div class="sa-frame"><img class="sa-empty" src="assets/product/order-empty.png" alt="Real order creation form"><img class="sa-filled" src="assets/product/order-filled.png" alt="One MacBook Air M3 for Demo Customer"></div><div class="sa-ring" data-layout-ignore></div><svg class="sa-cursor" viewBox="0 0 56 65" data-layout-ignore><path d="M5 3 L48 37 L29 39 L22 59 L5 3Z" fill="#202a29" stroke="white" stroke-width="4" stroke-linejoin="round"/></svg><div class="sa-confirm">Order created</div></div></div>
+<script>
+const tl=gsap.timeline({paused:true});
+tl.fromTo('.sa-title',{x:-70,opacity:1},{x:0,opacity:1,duration:0.36,ease:'power4.out'},0);
+tl.fromTo('.sa-frame',{y:70,opacity:0},{y:0,opacity:1,duration:0.4,ease:'power4.out'},0.08);
+tl.fromTo('.sa-filled',{opacity:0},{opacity:1,duration:0.1},1.05);
+tl.fromTo('.sa-cursor',{x:230,y:180,opacity:0},{x:0,y:0,opacity:1,duration:0.65,ease:'power3.inOut'},2.1);
+tl.fromTo('.sa-cursor',{scale:1},{scale:0.84,duration:0.12,yoyo:true,repeat:1},2.84);
+tl.fromTo('.sa-ring',{scale:0.7,opacity:0},{scale:1.15,opacity:1,duration:0.18,ease:'power2.out'},2.88);
+tl.to('.sa-ring',{opacity:0,duration:0.2},3.08);
+tl.fromTo('.sa-confirm',{y:90,opacity:0},{y:0,opacity:1,duration:0.28,ease:'power4.out'},3.03);
+window.__timelines.sale=tl;
+</script></template>

@@ -1,0 +1,15 @@
+{
+  "mode": "generate",
+  "maintenance": false,
+  "daily_time": "18:00",
+  "sample_slots": ["2026-11-14T18:30:00+05:00", "2026-11-14T19:00:00+05:00", "2026-11-14T21:30:00+05:00"],
+  "excluded_slots": ["2026-11-14T18:00:00+05:00"],
+  "run_aliases": {"2026-11-14T18:30:00+05:00": "2026-11-14"},
+  "prepare_minutes": 50,
+  "poll_minutes": 2,
+  "notifications": true,
+  "utc_offset": "+05:00",
+  "catch_up_minutes": 60,
+  "max_attempts": 3,
+  "retry_minutes": 5
+}

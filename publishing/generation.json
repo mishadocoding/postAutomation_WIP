@@ -1,0 +1,12 @@
+{
+  "provider": "codex",
+  "codex_executable": "codex",
+  "node_executable": "C:/Program Files/nodejs/node.exe",
+  "hyperframes_version": "0.9.39",
+  "max_attempts": 3,
+  "agent_timeout_seconds": 900,
+  "command_timeout_seconds": 600,
+  "run_budget_minutes": 90,
+  "max_video_seconds": 45,
+  "frame_sample_fps": 4
+}

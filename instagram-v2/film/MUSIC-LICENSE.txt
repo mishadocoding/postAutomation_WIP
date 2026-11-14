@@ -1,0 +1,17 @@
+Proposed soundtrack: Electro Cabello — Kevin MacLeod.
+Artist source: https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1400048
+Direct artist download: https://incompetech.com/music/royalty-free/mp3-royaltyfree/Electro%20Cabello.mp3
+License: Creative Commons Attribution 4.0 International.
+License URL: https://creativecommons.org/licenses/by/4.0/
+Artist-listed tempo: 117 BPM. This is source metadata, not a measured beat grid.
+
+Required attribution for publication (including ads; do not drop the credit):
+“Electro Cabello” Kevin MacLeod (incompetech.com)
+Licensed under Creative Commons: By Attribution 4.0 License
+https://creativecommons.org/licenses/by/4.0/
+Changes: excerpted, edited to picture and mixed with sound effects.
+
+Keep the credit in the published video's accompanying text; the final composition also includes an on-screen music credit.
+The music is a composition by the credited artist, not generated for this project.
+
+Current status: the user downloaded the artist's MP3 into the project. ID3 metadata identifies Electro Cabello / Kevin MacLeod. An edited cue is stored as assets/music/music-cut.wav and ingested into the local media ledger. Signal analysis measured 117 BPM. The film uses source 0.025–8.225s followed by 16.445–32.845s, with edge fades, normalization and a limiter. The cue measures 24.6s, -15.7 LUFS integrated, -4.2 dBTP and zero clipped samples. It was measured, not listened to. No generated music was used.

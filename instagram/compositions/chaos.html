@@ -1,0 +1,19 @@
+<template>
+<style>
+#root{position:absolute;inset:0;background:#f7f9f8;color:#202a29;font-family:'Promo Inter',Inter,sans-serif;overflow:hidden}
+.ch-title{position:absolute;left:90px;top:260px;margin:0;font-size:100px;line-height:1.06;letter-spacing:-5px;font-weight:700}.ch-question{position:absolute;left:94px;top:510px;margin:0;font-size:39px;letter-spacing:-1.2px}
+.ch-strip{position:absolute;left:90px;width:800px;height:148px;background:#fff;border:2px solid #dce5df;box-shadow:0 14px 24px #202a2908;padding:28px 36px;display:flex;align-items:center;justify-content:space-between;gap:20px}.ch-label{font-size:44px;font-weight:700;letter-spacing:-1.5px}.ch-icon{font-size:52px;color:#27755d}.ch-one{top:720px}.ch-two{top:915px}.ch-three{top:1110px}
+.ch-bottom{position:absolute;left:-120px;top:1540px;width:1320px;height:500px;background:#e2ebe5;transform:rotate(-12deg)}.ch-wipe{position:absolute;inset:0;background:#27755d;transform-origin:bottom}
+</style>
+<div id="root" data-composition-id="chaos" data-width="1080" data-height="1920"><div id="ch-clip" class="clip" data-start="0" data-duration="3" data-beat="scattered-tasks" data-track-index="0">
+<div class="ch-bottom" data-layout-ignore></div><h1 class="ch-title">Stock.<br>Orders.</h1><p class="ch-question">All over the place?</p>
+<div class="ch-strip ch-one"><span class="ch-label">Stock</span><span class="ch-icon">↗</span></div><div class="ch-strip ch-two"><span class="ch-label">Orders</span><span class="ch-icon">↗</span></div><div class="ch-strip ch-three"><span class="ch-label">Fulfillment</span><span class="ch-icon">↗</span></div><div class="ch-wipe" data-layout-ignore></div>
+</div></div>
+<script>
+const tl=gsap.timeline({paused:true});
+tl.fromTo('.ch-one',{x:-28,rotation:-6},{x:0,rotation:0,duration:0.46,ease:'back.out(1.15)'},0.15);
+tl.fromTo('.ch-two',{x:46,rotation:5},{x:0,rotation:0,duration:0.46,ease:'back.out(1.15)'},0.55);
+tl.fromTo('.ch-three',{x:-16,rotation:-3},{x:0,rotation:0,duration:0.46,ease:'back.out(1.15)'},0.95);
+tl.fromTo('.ch-wipe',{scaleY:0},{scaleY:1,duration:0.34,ease:'power4.inOut'},2.66);
+window.__timelines.chaos=tl;
+</script></template>

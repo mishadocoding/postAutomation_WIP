@@ -1,0 +1,14 @@
+<template>
+<style>
+#root{position:absolute;inset:0;background:var(--accent,#27755d);color:white;font-family:'Promo Inter',Inter,sans-serif;overflow:hidden}
+.ws-title{position:absolute;left:90px;top:260px;margin:0;font-size:102px;line-height:1.04;font-weight:700;letter-spacing:-5px}.ws-stage{position:absolute;left:90px;top:630px;width:840px;height:642px;background:white;border-radius:16px;box-shadow:0 24px 60px #123e3026;overflow:hidden}.ws-image{width:840px;height:auto;display:block}.ws-sweep{position:absolute;left:90px;top:1270px;width:840px;height:8px;background:#c6eda3;transform-origin:left}.ws-shape{position:absolute;left:500px;top:1490px;width:900px;height:900px;background:#347f66;transform:rotate(35deg)}
+</style>
+<div id="root" data-composition-id="workspace" data-width="1080" data-height="1920"><div id="ws-clip" class="clip" data-start="0" data-duration="3" data-beat="bring-together" data-track-index="0"><div class="ws-shape" data-layout-ignore></div><h1 class="ws-title">Bring it<br>together</h1><div class="ws-stage"><img class="ws-image" src="assets/product/workspace.png" alt="The actual Circuit Market workspace"></div><div class="ws-sweep" data-layout-ignore></div></div></div>
+<script>
+const tl=gsap.timeline({paused:true});
+tl.fromTo('.ws-title',{x:-65,opacity:1},{x:0,opacity:1,duration:0.38,ease:'power4.out'},0);
+tl.fromTo('.ws-stage',{y:120,scale:0.91,opacity:0},{y:0,scale:1,opacity:1,duration:0.55,ease:'power4.out'},0.12);
+tl.fromTo('.ws-sweep',{scaleX:0},{scaleX:1,duration:0.8,ease:'power3.inOut'},0.7);
+tl.to('.ws-stage',{y:-50,duration:0.28,ease:'power3.in'},2.72);
+window.__timelines.workspace=tl;
+</script></template>

@@ -1,0 +1,15 @@
+{
+  "enabled": true,
+  "project_path": "C:/Users/hadzhee2K/Documents/sampleERP",
+  "brand": "Circuit Market / SampleERP",
+  "language": "English",
+  "target_duration_seconds": 15,
+  "topics": [
+    "Creating an order and updating shared stock",
+    "Receiving a purchase order once and restocking inventory",
+    "Following an order from Processing to Shipped to Completed",
+    "Looking up a customer's individual purchase history",
+    "Exporting inventory and sales reports",
+    "Administrator and Seller workflow previews"
+  ]
+}
