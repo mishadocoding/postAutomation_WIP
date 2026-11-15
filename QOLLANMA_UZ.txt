@@ -1,0 +1,436 @@
+﻿INSTAGRAM POSTLARINI AVTOMATLASHTIRISH
+Yangi foydalanuvchi uchun qo‘llanma
+O‘zbekcha — 15.11.2026
+============================================
+
+1. DASTUR NIMA QILADI?
+
+Dastur Windows kompyuterida ikki xil usulda ishlaydi:
+
+A) Tayyor videoni belgilangan vaqtda Instagram’ga joylaydi.
+   Bu usul video yaratmaydi va tasvir sifatini sun’iy intellekt bilan
+   tekshirmaydi. Siz tayyor video va uning izohini berasiz.
+
+B) Mahalliy SampleERP loyihasi asosida yangi video yaratadi,
+   tekshiradi, kerak bo‘lsa tuzatadi va keyin joylaydi.
+   Buning uchun Codex va HyperFrames kerak. Tekshiruvdan o‘tmagan video
+   avtomatik joylanmaydi. Ushbu yo‘nalishda hali sifat bilan bog‘liq
+   to‘xtashlar bo‘lishi mumkin.
+
+Tayyor videoning jadval orqali avtomatik joylanishi amalda tasdiqlangan.
+Bu natija har bir yangi videoning yaratilishi va tekshiruvdan avtomatik
+o‘tishini kafolatlamaydi. Birinchi sinov uchun A usulidan boshlang.
+
+Matn o‘zbek tilida. Fayl nomlari, buyruqlar, sozlama kalitlari va tizim
+holatlarining identifikatorlari dastur talab qilgan asl shaklda berilgan.
+
+2. NIMALAR KERAK?
+
+- Windows kompyuteri va internet.
+- Python 3; o‘rnatilgan papkada pythonw.exe ham bo‘lishi kerak.
+- FFmpeg va ffprobe; ularning buyruqlari PowerShell’da ishlashi kerak.
+- Git — loyihani GitHub’dan olish uchun.
+- Instagram professional hisobi va unga ulangan Facebook sahifasi.
+- Meta ilovasi, tegishli ruxsatlar va haqiqiy kirish tokeni.
+- Windows vaqt mintaqasi: Toshkent, UTC+05:00.
+
+Faqat B usuli uchun qo‘shimcha:
+- Node.js 22 yoki undan yangi versiya va npm.
+- HyperFrames 0.9.39; aynan shu versiya loyihada belgilangan.
+- Hisobga kirilgan Codex buyruq qatori dasturi va yetarli foydalanish limiti.
+- HyperFrames ko‘rsatmalari o‘rnatilgan bo‘lishi kerak.
+- SampleERP dasturining mahalliy nusxasi.
+
+Python qismining asosiy ishlashi uchun alohida pip paketlari talab
+qilinmaydi. Codex xizmatidan foydalanish hisobingiz shartlari va
+limitlariga bog‘liq; bu qo‘llanma cheksiz bepul yaratishni va’da qilmaydi.
+
+3. LOYIHANI OLISH VA TO‘G‘RI PAPKAGA KIRISH
+
+Oddiy Windows hisobingizdan PowerShell oching. Avtomatlashtirishni ham
+aynan shu hisob ostida o‘rnating. Codex’ning cheklangan xizmat hisobidan
+vazifa o‘rnatishga urinmang.
+
+Yangi nusxa olish:
+
+  cd "$env:USERPROFILE\Documents"
+  git clone https://github.com/mishadocoding/postAutomation_WIP.git postAutomation_WIP
+  cd .\postAutomation_WIP\publishing
+
+Loyiha avvaldan bo‘lsa, uning publishing papkasiga kiring. Masalan:
+
+  cd "C:\Users\hadzhee2K\Documents\SampleERP-promo\publishing"
+
+Keyingi buyruqlar publishing papkasidan bajariladi. Qo‘llanmadagi
+kompyuter yo‘llarini o‘z kompyuteringizga moslang.
+
+4. META VA INSTAGRAM HISOBINI TAYYORLASH
+
+1) Instagram hisobini professional hisobga o‘tkazing.
+2) Facebook sahifasini yarating va Instagram hisobiga ulang.
+3) Meta ishlab chiquvchi ilovasini yarating. Ushbu dastur Facebook orqali
+   kirish yo‘nalishidan foydalanadi; boshqa yo‘nalish tokenini aralashtirmang.
+4) Ilovada kontentni boshqarish va joylash imkoniyatini sozlang.
+5) Quyidagi ruxsatlarni tegishli hisob va sahifaga bering:
+
+   instagram_basic
+   instagram_content_publish
+   pages_read_engagement
+   pages_show_list
+   business_management
+
+Oxirgi ruxsat ayrim sahifa/biznes tuzilmalari uchun kerak bo‘ladi.
+Meta ilovangiz ko‘rsatmalariga amal qiling. Sinov rejimida ishlayotgan
+hisobga ilova ichida tegishli rol berilgan bo‘lishi kerak. Boshqa mijozlar
+hisoblariga xizmat ko‘rsatish uchun qo‘shimcha Meta tekshiruvi talab
+qilinishi mumkin.
+
+6) Meta vositasida o‘z ilovangizni tanlab, foydalanuvchi tokenini oling.
+7) Sahifa va Instagram hisobining raqamli identifikatorini topish uchun:
+
+   me/accounts?fields=id,name,access_token,instagram_business_account{id,username}
+
+Natijadagi instagram_business_account.id — kerakli Instagram ID.
+Bu Facebook sahifasining ID raqami ham, @foydalanuvchi nomi ham emas.
+
+Uzoq muddatli foydalanish uchun foydalanuvchi tokenini uzoq muddatli
+tokenga almashtiring, undan sahifa tokenini oling. Meta tokenni tekshirish
+vositasida uzaytirish tugmasi mavjud bo‘lsa, undan foydalanish mumkin.
+Tugma bo‘lmasa, rasmiy almashish jarayonini sozlash uchun ilova egasiga
+murojaat qiling. Muddati o‘tgan token avval qayta olinishi kerak.
+
+Sahifa tokenining doimiy tugash sanasi bo‘lmasligi mumkin, ammo ruxsat
+bekor qilinishi yoki boshqa kirish cheklovlari uni yaroqsiz qilishi mumkin.
+Ilova siri, parol va tokenni suhbatga yoki GitHub’ga joylamang.
+
+5. TOKENNI MAHALLIY FAYLGA YOZISH
+
+.env mavjud bo‘lmasa, namuna asosida yarating:
+
+  if (-not (Test-Path .env)) { Copy-Item .env.example .env }
+  notepad .env
+
+Uchta qiymatni kiriting:
+
+  META_API_VERSION=v27.0
+  INSTAGRAM_ACCOUNT_ID=INSTAGRAM_HISOBINING_RAQAMLI_ID_SI
+  META_ACCESS_TOKEN=SAHIFA_TOKENI
+
+Ko‘rsatilgan API versiyasi misol; Meta ilovangiz qo‘llab-quvvatlaydigan
+versiyani yozing. Namuna matnlarini haqiqiy qiymatlar bilan almashtiring.
+Mavjud .env faylini qaytadan nusxalab, tokenni o‘chirib yubormang.
+
+Tekshirish:
+
+  python .\push_reel.py --check-account
+
+Natijada hisobingiz nomi va foydalanish kvotasi ko‘rinishi kerak.
+Bu buyruq video yuklamaydi va post joylamaydi. U keyingi videoning
+albatta qabul qilinishini kafolatlamaydi.
+
+Agar kompyuter muhitida META_ o‘zgaruvchilari oldin belgilangan bo‘lsa,
+ular .env dagi qiymatlardan ustun turadi. Eskirgan muhit tokeni sababli
+natija farq qilishi mumkin; sozlovchi mutaxassis bilan tekshiring.
+
+6. DASTLABKI SOZLAMALAR
+
+Avval schedule.json faylini ochib, yangi o‘rnatish vaqtida:
+
+  "maintenance": true
+
+qilib qo‘ying. Bu yangi rejalashtirilgan ishlarni va yakuniy joylashni
+ushlab turadi; allaqachon boshlangan yaratish jarayoni darhol tugamaydi.
+
+Asosiy sozlamalar schedule.json ichida:
+
+  daily_time        — kunlik nashr vaqti, masalan "18:00".
+  utc_offset        — "+05:00"; hozirgi dastur Toshkentga moslangan.
+  prepare_minutes   — oldindan tayyorlash vaqti; hozir 50 daqiqa.
+  poll_minutes      — vazifani tekshirish oralig‘i; hozir 2 daqiqa.
+  catch_up_minutes  — kechikkan ish uchun ruxsat etilgan davr; hozir 60.
+  notifications    — mahalliy bildirishnomalar uchun true.
+  mode             — "generate" avtomatik yaratish uchun.
+  sample_slots     — sana bilan berilgan bir martalik yaratish vaqtlari.
+  excluded_slots   — bajarilmaydigan aniq vaqtlar.
+  run_aliases      — eski ish yozuvini saqlash uchun texnik moslashtirish.
+
+Yangi o‘rnatishda eski tajriba sanalari kerak bo‘lmasa, sample_slots va
+excluded_slots ni [], run_aliases ni {} qiling. Boshqa mashinada ishlayotgan
+faol jadvalni shu qo‘llanma misollari bilan ko‘r-ko‘rona almashtirmang.
+
+Muhim: schedule-file orqali qo‘shilgan videolar alohida ma’lumotlar bazasida
+saqlanadi. sample_slots ro‘yxatini tahrirlash ularni bekor qilmaydi.
+
+Faqat A usuli kerak bo‘lsa va SampleERP sizda bo‘lmasa: project_source.json
+ichida enabled=false qiling, schedule.json ichida mode="generate" va
+poll_minutes=2 ni saqlang. briefs papkasida aniq sana uchun yaratish
+topshiriqlarini qo‘shmang. Shunda tayyor fayllar tez-tez tekshiriladi, lekin
+sun’iy intellektga yaratish topshirig‘i berilmaydi. mode="queue" bilan yangi
+vazifa o‘rnatish boshqa, kunlik ish tartibini beradi; uni bir martalik
+vaqtlarni har ikki daqiqada tekshirish uchun tanlamang.
+
+7. TAYYOR VIDEONI JADVAL BO‘YICHA JOYLASH — ENG ODDIY USUL
+
+MP4 yoki MOV video va UTF-8 kodlashdagi oddiy izoh faylini tayyorlang.
+Asosiy izoh 1–2200 belgi bo‘lishi kerak. Misolda video nomi tayyor_video.mp4,
+izoh fayli izoh.txt. Ikkalasi publishing papkasida joylashgan deb olinadi.
+
+Keyingi 10 daqiqadan keyinga rejalashtirish:
+
+  $postAt = (Get-Date).AddMinutes(10).ToString("yyyy-MM-ddTHH:mm:sszzz")
+  python .\automation.py schedule-file --video .\tayyor_video.mp4 --caption-file .\izoh.txt --at $postAt
+
+Bu buyruq nashr qilmaydi: fayllarning mahalliy nusxasini va vaqtini saqlaydi.
+Ishga tushirilgan Windows vazifasi belgilangan vaqtdagi yoki undan keyingi
+birinchi tekshiruvda yuklash va joylashni bajaradi. Qo‘lda --publish
+buyrug‘ini qo‘shimcha ishga tushirish kerak emas.
+
+Vaqt o‘tgan bo‘lsa yoki shu video oldin shu hisobga dastur orqali
+joylangan bo‘lsa, navbatga qo‘shish rad etiladi. Ushbu usul kunlik yaratish
+jadvali bilan birga ishlaydi. maintenance=true bo‘lsa, u ham kutiladi.
+
+Hozir bir martalik videoni bekor qilish uchun alohida buyruq yo‘q.
+Zarur bo‘lsa maintenance=true bilan barcha yangi joylashlarni ushlab
+turing va loyiha sozlovchisiga murojaat qiling. Bazani o‘chirmang.
+
+8. WINDOWS VAZIFASINI O‘RNATISH VA YOQISH
+
+O‘rnatishdan oldin kompyuter vaqti Toshkentga mosligini va token bilan
+hisob tekshiruvi ishlashini tekshiring. Sozlamalar tayyor bo‘lgach,
+schedule.json ichida maintenance=false qiling.
+
+Faqat sozlamalarni ko‘rish:
+
+  python .\install_task.py
+
+O‘rnatish yoki shu foydalanuvchining mos vazifasini yangilash va boshlash:
+
+  python .\install_task.py --install --update --start
+
+DIQQAT: ikkinchi buyruq haqiqiy ishni boshlaydi. Nashr vaqti kelgan bo‘lsa,
+video yuklanishi va joylanishi mumkin.
+
+Vazifa nomi: PostAutomation-Instagram.
+PowerShell oynasini yopish mumkin. Windows hisobidan chiqib ketmang;
+kompyuterni yoqilgan, uyg‘oq va internetga ulangan holda qoldiring.
+Vazifa oddiy, administrator bo‘lmagan hisob ostida ishlaydi. Boshqa serverga
+o‘tkazilmaguncha kompyuter o‘chirilgan paytda avtomatlashtirish ishlamaydi.
+
+Windows vazifasini ko‘rish:
+
+  schtasks /Query /TN "PostAutomation-Instagram" /V /FO LIST
+
+Takroriy vazifa nusxalari bo‘lsa, dastur bir xil oraliqdagi chaqiruvlarni
+birlashtiradi. Keraksiz nusxalarni aniqlab tozalashni sozlovchiga topshiring.
+
+9. VIDEONI AVTOMATIK YARATISHNI SOZLASH
+
+Bu bo‘lim faqat B usuli uchun. Tayyor videoni joylash uchun uni bajarish
+shart emas.
+
+Vositalarni tekshiring:
+
+  python --version
+  node --version
+  ffmpeg -version
+  ffprobe -version
+  codex --version
+
+Codex o‘rnatish yo‘riqnomasi 15-bo‘limda. Hisobga kirish:
+
+  codex login
+  codex login status
+
+HyperFrames versiyasini kompyuterga olish va ko‘rsatmalarini o‘rnatish:
+
+  npx --yes hyperframes@0.9.39 --version
+  npx --yes hyperframes@0.9.39 skills update
+
+Node.js ning PowerShell ishlatayotgan versiyasi ham kamida 22 bo‘lsin.
+Yangi ko‘rsatmalar o‘rnatilgach, yangi Codex jarayonini boshlang.
+
+generation.json ichidagi node_executable yo‘lini o‘z node.exe faylingizga
+moslang. Uni PowerShell’da topish mumkin:
+
+  (Get-Command node).Source
+
+project_source.json ichida:
+- project_path: haqiqiy SampleERP manba papkasining to‘liq yo‘li.
+- enabled: true — mahalliy loyiha asosida avtomatik topshiriq tuzish.
+- language: video matni tili; masalan "O‘zbekcha".
+- topics: ko‘rsatilishi mumkin bo‘lgan mavzular.
+
+SampleERP dasturi ushbu video omboriga qo‘shilmagan; uni alohida oling.
+Fayllarni saqlang: dastur diskdagi saqlangan, jumladan Git’ga hali
+kiritilmagan o‘zgarishlarni o‘qiydi. Masofaviy Git nusxasini o‘zi yangilamaydi.
+
+Tizim holatini tekshirish:
+
+  python .\generation.py doctor
+
+Brauzer yetishmasa:
+
+  npx --yes hyperframes@0.9.39 browser ensure
+
+Nashrsiz to‘liq sinov:
+
+  $sinovSana = (Get-Date).AddDays(1).ToString("yyyy-MM-dd")
+  python .\generation.py test --date $sinovSana
+
+Bu yaratish, tekshirish, tayyor video faylini chiqarish va mustaqil ko‘rish
+jarayonini bajaradi; Instagram’ga yuklamaydi yoki joylamaydi. Natija
+reviewed bo‘lsa, sinov barcha mezonlardan o‘tgan. Oldin muvaffaqiyatli
+tugagan ayni sana sinovi qayta yaratilmasligi mumkin.
+
+Faqat avvalgi sinov loyihasini qo‘lda tuzatgandan keyingi qayta tekshirish:
+
+  python .\generation.py recheck --date $sinovSana
+
+Bu ham nashr qilmaydi va maintenance sozlamasini o‘zgartirmaydi. Codex
+muallifini qayta ishga tushirmasdan mavjud loyiha tekshiriladi va chiqariladi.
+
+10. KUNLIK ISHLASH TARTIBI
+
+daily_time=18:00 va prepare_minutes=50 bo‘lsa, tayyorlash 17:10 dan
+boshlanishi mumkin. Ishchi jarayon har 2 daqiqada jadvalga qaraydi.
+Yangi video manbadagi amaldagi faktlar asosida tuziladi. Tekshiruv yoki
+mustaqil ko‘rishdan o‘tmasa, ko‘pi bilan uchta urinish qilinadi.
+
+Manba o‘zgarsa, eski ma’lumotli video nashri ushlab turilishi mumkin.
+Nashr hech qachon ataylab muddatidan oldin bajarilmaydi. Aniq soniyada
+joylash kafolatlanmaydi: yaratish, tekshirish, internet va Meta qayta
+ishlashi vaqt oladi. Kechikish oynasi tugasa, ish qo‘lda ko‘rish uchun qoladi.
+
+Bir xil mavzu qayta ishlatilishi mumkin. Aynan bir xil va juda o‘xshash
+videolarni kamaytirish tekshiruvlari bor, ammo mazmuniy noyoblikka mutlaq
+kafolat yo‘q. Oddiy foydalanuvchi natijalarni kuzatib turishi kerak.
+
+11. HOLAT, JURNAL VA BILDIRISHNOMALAR
+
+  python .\automation.py status
+  python .\automation.py run
+
+Ikkinchi buyruq faqat jadvalni oldindan ko‘rsatadi; haqiqiy ish boshlamaydi.
+
+Bugungi jurnalning oxirgi qismi:
+
+  $kun = Get-Date -Format yyyy-MM-dd
+  Get-Content ".\.state\automation\logs\$kun.log" -Tail 60
+
+Asosiy holatlar:
+  queued          — navbatda, vaqtini kutmoqda.
+  assigned        — ishchi jarayonga berilgan yoki qayta urinishni kutmoqda.
+  generating      — yaratilmoqda yoki tekshirilmoqda.
+  reviewed        — nashrsiz sinov muvaffaqiyatli o‘tgan.
+  approved        — tekshiruvlardan o‘tgan; hali nashr degani emas.
+  published       — Meta nashrni tasdiqlagan.
+  needs_attention — avtomatik davom etish to‘xtagan; sababini ko‘ring.
+
+Muvaffaqiyat yoki to‘xtash bo‘yicha Windows bildirishnomasi ko‘rsatiladi.
+Windows’ning bildirishnoma cheklovlari uni yashirishi mumkin. Sinov:
+
+  python .\notifications.py --test
+
+Yozuvlar: .state\notifications\events.jsonl.
+Yaratish dalillari: .state\generation\ ichidagi sana va urinish papkalari.
+Nashr tarixi: .state\posts.sqlite3.
+Jadval bo‘yicha tayyor videolar: .state\automation\queue.sqlite3.
+
+Jadvaldan nashr bo‘lganini faqat Instagram havolasi bilan xulosa qilmang.
+Ishchi jurnalidagi vaqt, vazifa yozuvi va nashr yozuvidagi
+scheduled_file_worker identifikatori tayyor video uchun dalil bo‘ladi.
+
+12. INTERNET VA ODDIY XATOLAR
+
+  python .\network_check.py
+  python .\push_reel.py --check-account
+
+Bular nashr qilmaydi. Birinchi buyruq token yubormasdan ikki Meta manziliga
+ulanishni tekshiradi; ikkinchisi hisobga amaldagi kirishni tekshiradi.
+400 yoki 429 javobi server javob berganini ko‘rsatadi. 429 so‘rovlar
+cheklanganini bildiradi; bu muvaffaqiyatli video yuklash degani emas.
+Natija .state\network\latest.json ichiga yoziladi.
+
+- 10013 yoki access_denied: jarayon uchun Windows tarmoq ruxsati cheklangan.
+  Oddiy Windows hisobida tekshiring. Codex’ning cheklangan hisobidagi xato
+  asosiy ishchi hisob ham bloklangan degani emas.
+- 190, jumladan 463: token eskirgan yoki yaroqsiz bo‘lishi mumkin.
+  Tokenni tekshiring, kerak bo‘lsa yangilang va hisob tekshiruvini qaytaring.
+- Hisoblar ro‘yxati bo‘sh: Facebook sahifasi mavjudligini, sahifa ustidan
+  vakolatingizni va berilgan ruxsatlarni tekshiring.
+- Instagram ID topilmaydi: professional hisobning Facebook sahifasiga
+  to‘g‘ri ulanganini tekshiring.
+- ffmpeg, ffprobe, node yoki codex topilmaydi: dastur o‘rnatilganini va
+  PowerShell uni topayotganini tekshiring; yangi PowerShell oynasini oching.
+- needs_attention: urinishdagi failure.json, check.json va review.json
+  fayllarini o‘qing. Xatoni aylanib o‘tish uchun bazani o‘chirmang.
+- creating, uploading yoki publishing holati uzilib qolgan: nashr bo‘lgan
+  bo‘lishi mumkin. Avval Instagram va saqlangan holatni tekshiring;
+  ko‘r-ko‘rona ikkinchi marta nashr qilmang.
+
+Vaqtinchalik o‘qish so‘rovlari uch martagacha qaytarilishi mumkin. Yuklash va
+nashr so‘rovlari ko‘r-ko‘rona takrorlanmaydi; saqlangan holat hisobga olinadi.
+
+13. TO‘XTATISH, QAYTA YOQISH VA QO‘LDA NASHR
+
+Vaqtincha ushlab turish: schedule.json ichida maintenance=true.
+Davom ettirish: maintenance=false. Saqlanganidan keyingi chaqiruv yangi
+sozlamani o‘qiydi. Vaqti o‘tgan barcha ishlar qaytadan bajarilmaydi.
+
+Windows vazifasini o‘chirib turish:
+
+  schtasks /Change /TN "PostAutomation-Instagram" /Disable
+
+Qayta yoqish:
+
+  schtasks /Change /TN "PostAutomation-Instagram" /Enable
+
+Bu buyruqlar ishga tushib bo‘lgan jarayonni darhol to‘xtatmaydi. Kuch bilan
+uzish yuklash yoki nashr natijasini noaniq qoldirishi mumkin.
+
+Faqat darhol qo‘lda nashr qilish niyatida bo‘lsangiz:
+
+  python .\push_reel.py --video .\tayyor_video.mp4 --caption-file .\izoh.txt --publish
+
+Bu haqiqiy nashr qiladi, jadvalni kutmaydi va tasvir sifatini tekshirmaydi.
+Qo‘lda nashr muvaffaqiyatini Windows jadvali ishlaganining isboti deb olmang.
+Bir videoni bir vaqtning o‘zida qo‘lda va jadval orqali ishga tushirmang.
+
+14. YANGILASH VA ZAXIRA
+
+.env va .state papkasini xavfsiz mahalliy joyda zaxiralang. GitHub’dan yangi
+nusxa olish tokenni, nashr tarixini yoki Windows vazifasini tiklamaydi.
+.state o‘chirilsa, takroriy nashrdan himoya tarixi yo‘qolishi mumkin.
+
+Ishlayotgan joylash jarayonini tugatib, maintenance=true qilgandan keyin
+loyiha ildiz papkasidan:
+
+  git pull --ff-only
+
+Mahalliy o‘zgarishlar to‘sqinlik qilsa, ularni yo‘qotadigan buyruqlarni
+ishlatmang. Yangilashdan keyin holat va vositalarni tekshiring.
+
+Yangi papkaga ko‘chirsangiz, project_source.json va generation.json
+yo‘llarini, shuningdek Windows vazifasini yangi papkaga moslang.
+
+15. RASMIY MANBALAR
+
+Meta tokenlari bo‘yicha:
+https://developers.facebook.com/documentation/facebook-login/guides/access-tokens/get-long-lived
+
+Meta tokenini tekshirish vositasi:
+https://developers.facebook.com/tools/debug/accesstoken/
+
+Meta so‘rov yuborish vositasi:
+https://developers.facebook.com/tools/explorer/
+
+Codex o‘rnatish va foydalanish:
+https://developers.openai.com/codex/cli/
+
+HyperFrames:
+https://hyperframes.heygen.com/
+
+Qisqa boshlash tartibi: papkaga kiring -> .env ni sozlang -> hisobni
+tekshiring -> jadval va maintenance ni sozlang -> Windows vazifasini
+o‘rnating -> tayyor videoni kelajak vaqtiga qo‘shing -> natijani jurnal va
+Instagram havolasi bilan tasdiqlang.
