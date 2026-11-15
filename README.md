@@ -34,8 +34,9 @@ clone does not restore those operational records or install a scheduled task.
 From `publishing/`:
 
 ```powershell
-python -m unittest test_push_reel test_automation test_generation test_recurring test_structure
+python -m unittest test_push_reel test_automation test_generation test_recurring test_structure test_network test_scheduled_posts
 python .\generation.py doctor
+python .\network_check.py
 python .\push_reel.py --check-account
 python .\automation.py run
 ```

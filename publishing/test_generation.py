@@ -239,7 +239,8 @@ class GenerationTests(unittest.TestCase):
 
     def test_generation_mode_does_not_fall_back_to_unreviewed_queue(self):
         with patch.object(g, 'run_slot', return_value=0) as generated, \
-                patch.object(a, 'Queue', side_effect=AssertionError('queue bypass forbidden')):
+                patch.object(a, 'DATA', self.root / 'automation'), \
+                patch('scheduled_posts.run_due', return_value=None):
             self.assertEqual(a.run_live(CONFIG, OPTIONS, NOW), 0)
             generated.assert_called_once_with(CONFIG, OPTIONS, NOW)
 

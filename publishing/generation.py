@@ -225,6 +225,15 @@ Avoid empty frames during UI replacements: retain the outgoing panel until the
 incoming panel is fully visible, or switch both at exactly the same frame with
 the incoming panel already opaque. Screenshot crops must not expose fragments
 of neighboring labels, columns or buttons, including during entrances/zoom moves.
+Failures seen in prior scheduled runs must not recur: core status names and the
+action being demonstrated must remain readable at 360px phone width. Show those
+source-matched labels prominently at 48px or larger in the 1080px composition;
+do not rely solely on tiny status badges in a full-screen screenshot. Keep the
+order/product identity visible alongside any magnified source detail. Use a
+bounded CSS background to frame a screenshot detail; do not place an oversized
+SVG image inside a small SVG viewBox, which trips strict container-overflow
+checks. Never cover headline text with a later opaque scene background. Run
+local lint while authoring so static errors do not consume a repair attempt.
 During repair, preserve existing current screenshots and unrelated working scene
 code. Do not recapture source assets when its fingerprint/reference directory
 has not changed. Make the smallest change that fixes the concrete findings.

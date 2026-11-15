@@ -11,6 +11,7 @@ from pathlib import Path
 import re
 import shutil
 import socket
+import ssl
 import sqlite3
 import subprocess
 import sys
@@ -22,6 +23,31 @@ ROOT = Path(__file__).resolve().parent
 
 class PushError(Exception):
     pass
+
+
+def network_failure(exc):
+    """Classify transport errors without exposing URLs, credentials or proxy data."""
+    reason = exc.reason if isinstance(exc, error.URLError) else exc
+    winerror = getattr(reason, 'winerror', None)
+    errno = getattr(reason, 'errno', None)
+    if isinstance(reason, PermissionError) or winerror == 10013 or errno in (1, 13):
+        category, retryable = 'access_denied', False
+        message = 'The operating system denied network access for this process.'
+    elif isinstance(reason, ssl.SSLError):
+        category, retryable = 'tls', False
+        message = 'TLS negotiation or certificate verification failed.'
+    elif isinstance(reason, (TimeoutError, socket.timeout)):
+        category, retryable = 'timeout', True
+        message = 'The connection timed out.'
+    elif isinstance(reason, socket.gaierror):
+        category = 'dns'
+        retryable = errno == getattr(socket, 'EAI_AGAIN', None)
+        message = 'Hostname resolution failed.'
+    else:
+        category, retryable = 'connection', isinstance(reason, ConnectionError)
+        message = 'The network connection failed.'
+    return {'category': category, 'exception': type(reason).__name__,
+            'winerror': winerror, 'errno': errno, 'retryable': retryable, 'message': message}
 
 
 def safe_diagnostic(value, token):
@@ -144,6 +170,19 @@ class Meta:
         self.opener = request.build_opener(NoRedirect())
 
     def send(self, req, timeout=60):
+        # Only repeat read requests. A lost POST response may have taken effect.
+        attempts = 3 if req.get_method() == 'GET' else 1
+        for index in range(attempts):
+            try:
+                return self.send_once(req, timeout)
+            except TransportError as exc:
+                if exc.detail['retryable'] and index + 1 < attempts:
+                    print('Temporary Meta read connection failure; retrying', index + 2, 'of', attempts)
+                    time.sleep((1, 3)[index])
+                    continue
+                raise PushError(str(exc)) from None
+
+    def send_once(self, req, timeout):
         try:
             with self.opener.open(req, timeout=timeout) as response:
                 result = json.load(response)
@@ -160,8 +199,9 @@ class Meta:
             summary = safe_diagnostic(json.dumps(detail, ensure_ascii=True), self.token)
             raise PushError(f'Meta {stage} HTTP {exc.code}: {summary}. '
                             'Saved state was retained.') from None
-        except (error.URLError, TimeoutError, socket.timeout, OSError):
-            raise PushError('Network request failed or timed out. Saved state was retained.') from None
+        except (error.URLError, TimeoutError, socket.timeout, OSError) as exc:
+            detail = network_failure(exc)
+            raise TransportError(detail) from None
         except ValueError:
             raise PushError('Meta returned an unreadable response. Saved state was retained.') from None
         if not isinstance(result, dict) or result.get('error'):
@@ -190,6 +230,16 @@ class Meta:
                 'file_size': str(size), 'Content-Length': str(size),
                 'Content-Type': 'application/octet-stream',
             }), timeout=600)
+
+
+class TransportError(PushError):
+    def __init__(self, detail):
+        self.detail = detail
+        codes = ', '.join(f'{key}={detail[key]}' for key in ('winerror', 'errno') if detail[key] is not None)
+        suffix = f' ({codes})' if codes else ''
+        super().__init__(f"Meta network {detail['category']}{suffix}: {detail['message']} "
+                         'No complete Meta HTTP response was received. Saved state was retained. '
+                         'Run network_check.py under the Windows account used by the scheduled task.')
 
 
 class State:

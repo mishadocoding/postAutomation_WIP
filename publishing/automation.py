@@ -4,12 +4,14 @@ from contextlib import closing, redirect_stderr, redirect_stdout
 from datetime import datetime, timedelta, timezone
 import hashlib
 import json
+import getpass
 from pathlib import Path
 import re
 import shutil
 import sqlite3
 import sys
 import uuid
+import os
 
 import push_reel as p
 
@@ -78,6 +80,10 @@ class Queue:
             CREATE TABLE IF NOT EXISTS slots (
                 account TEXT NOT NULL, slot TEXT NOT NULL, item_id TEXT,
                 PRIMARY KEY(account, slot));
+            CREATE TABLE IF NOT EXISTS scheduled_files (
+                account TEXT NOT NULL, at TEXT NOT NULL, item_id TEXT NOT NULL UNIQUE,
+                started_at TEXT, executed_by TEXT, completed_at TEXT, notified_status TEXT,
+                PRIMARY KEY(account, at));
         ''')
         self.db.commit()
 
@@ -92,6 +98,7 @@ class Queue:
                 row = self.db.execute('SELECT * FROM items WHERE id=?', (existing['item_id'],)).fetchone()
                 return dict(row) if row else None
             row = self.db.execute("SELECT * FROM items WHERE account=? AND status='queued' "
+                                  'AND NOT EXISTS (SELECT 1 FROM scheduled_files s WHERE s.item_id=items.id) '
                                   'ORDER BY created,id LIMIT 1', (account,)).fetchone()
             self.db.execute('INSERT INTO slots VALUES (?,?,?)',
                             (account, slot, row['id'] if row else None))
@@ -124,17 +131,23 @@ def published_state(job):
     return json.loads(row[0]) if row else {}
 
 
-def enqueue(video, caption_file, account):
+def enqueue(video, caption_file, account, at=None):
     video = video.resolve()
     p.inspect_video(video)
     caption = caption_file.read_text(encoding='utf-8-sig').strip()
     if not caption or len(caption) > 2200:
         raise p.PushError('Caption must contain 1–2200 characters.')
     digest = p.file_digest(video)
+    target = p.parse_at(at) if at else None
+    if target and target <= datetime.now(timezone.utc):
+        raise p.PushError('The one-off target must be in the future.')
     job = publisher_job(account, digest)
     if published_state(job).get('phase') == 'published':
         raise p.PushError('This video was already published to this account; it was not queued again.')
     with p.process_lock(DATA), closing(Queue(DATA).db) as db:
+        if target and db.execute('SELECT 1 FROM scheduled_files WHERE account=? AND at=?',
+                                 (account, target.isoformat())).fetchone():
+            raise p.PushError('There is already a file scheduled for this account and time.')
         if db.execute('SELECT id FROM items WHERE account=? AND digest=?', (account, digest)).fetchone():
             raise p.PushError('This video is already in the queue/history for this account.')
         item_id = uuid.uuid4().hex[:12]
@@ -148,12 +161,16 @@ def enqueue(video, caption_file, account):
         with db:
             db.execute('INSERT INTO items (id,account,digest,video,caption,created) VALUES (?,?,?,?,?,?)',
                        (item_id, account, digest, str(snapshot), caption, now))
+            if target:
+                db.execute('INSERT INTO scheduled_files (account,at,item_id) VALUES (?,?,?)',
+                           (account, target.isoformat(), item_id))
     print('Queued:', item_id, 'for Instagram account', account)
-    print('The worker will take the oldest queued video at the next daily posting slot.')
+    print('One-off worker publication target: ' + target.astimezone(TZ).isoformat() if target else
+          'The worker will take the oldest queued video at the next daily posting slot.')
     return item_id
 
 
-def process_item(queue, item, config, options, now):
+def process_item(queue, item, config, options, now, execution=None, before_publish=None):
     """Runs only for an assigned due slot, with local publisher locking."""
     job = publisher_job(config['INSTAGRAM_ACCOUNT_ID'], item['digest'])
     with p.process_lock(ROOT / '.state'):
@@ -183,10 +200,15 @@ def process_item(queue, item, config, options, now):
                 api = p.Meta(config)
                 identity = api.graph(config['INSTAGRAM_ACCOUNT_ID'], {'fields': 'id,username'})
                 print('Target account:', identity.get('username', config['INSTAGRAM_ACCOUNT_ID']))
+                if execution:
+                    state['execution'] = execution
+                    state.setdefault('phase', 'queued')
+                    store.save(job, state)
                 if state.get('phase') == 'uploading':
                     p.retry_upload(api, store, job, config)
+                extra = {'before_publish': before_publish} if before_publish else {}
                 result = p.push(api, store, job, video, item['caption'],
-                                config['INSTAGRAM_ACCOUNT_ID'], True, 480)
+                                config['INSTAGRAM_ACCOUNT_ID'], True, 480, **extra)
                 if result.get('phase') != 'published':
                     raise p.PushError('Publisher did not confirm publication.')
                 queue.update(item['id'], status='published', permalink=result.get('permalink'), error=None)
@@ -211,6 +233,15 @@ def run_live(config, options, now):
     if options.get('maintenance'):
         print('Automation is in maintenance: no generation, upload or publication attempted.')
         return 0
+    import scheduled_posts
+    with p.process_lock(DATA):
+        queue = Queue(DATA)
+        try:
+            timed = scheduled_posts.run_due(queue, config, options, now)
+        finally:
+            queue.db.close()
+    if timed is not None:
+        return timed
     if options.get('mode') == 'generate':
         import generation
         return generation.run_slot(config, options, now)
@@ -231,12 +262,36 @@ def run_live(config, options, now):
             queue.db.close()
 
 
+def run_single_worker(config, options, now):
+    """Serialize task copies and coalesce duplicate polls in one interval."""
+    try:
+        with p.process_lock(DATA / 'worker'):
+            stamp = DATA / 'worker' / 'last-poll.json'
+            bucket = int(now.timestamp()) // (options.get('poll_minutes', 2) * 60)
+            if stamp.is_file() and json.loads(stamp.read_text()).get('bucket') == bucket:
+                print('Duplicate poll in this interval; no work repeated.')
+                return 0
+            temp = stamp.with_suffix('.tmp')
+            temp.write_text(json.dumps({'bucket': bucket, 'pid': os.getpid(), 'user': getpass.getuser()}))
+            temp.replace(stamp)
+            return run_live(config, options, now)
+    except p.PushError as exc:
+        if str(exc).startswith('Another publisher is running.'):
+            print('A worker or publisher is already active; this invocation will not overlap it.')
+            return 0
+        raise
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest='command', required=True)
     add = sub.add_parser('add', help='Copy a finished video and caption into the daily queue')
     add.add_argument('--video', type=Path, required=True)
     add.add_argument('--caption-file', type=Path, required=True)
+    scheduled = sub.add_parser('schedule-file', help='Schedule one rendered video; no upload now')
+    scheduled.add_argument('--video', type=Path, required=True)
+    scheduled.add_argument('--caption-file', type=Path, required=True)
+    scheduled.add_argument('--at', required=True, help='Future ISO time with timezone')
     sub.add_parser('status', help='Show queue status without contacting Meta')
     reset = sub.add_parser('retry', help='Requeue a failed item for a future daily slot')
     reset.add_argument('item_id')
@@ -247,6 +302,9 @@ def main(argv=None):
     options = settings()
     p.load_env(ROOT / '.env')
     config = p.configuration()
+    if args.command == 'schedule-file':
+        enqueue(args.video, args.caption_file, config['INSTAGRAM_ACCOUNT_ID'], args.at)
+        return 0
     if args.command == 'add':
         if options.get('mode') == 'generate':
             raise p.PushError('Finished-video queue is inactive in generation mode. Add a dated brief under briefs/.')
@@ -279,8 +337,12 @@ def main(argv=None):
                 latest = latest_tests[-1]
                 print('Latest no-publish test:', latest.parent.name)
                 print(p.safe_diagnostic(latest.read_text(), config['META_ACCESS_TOKEN']))
-            print('The finished-video queue below is inactive while mode=generate.')
+            print('Daily FIFO is inactive in generation mode; explicitly scheduled files still run.')
         with closing(Queue(DATA).db) as db:
+            for timed in db.execute('SELECT s.at,s.executed_by,s.completed_at,i.id,i.status,i.attempts,i.error,i.permalink '
+                                    'FROM scheduled_files s JOIN items i ON i.id=s.item_id WHERE s.account=? ORDER BY s.at',
+                                    (config['INSTAGRAM_ACCOUNT_ID'],)):
+                print('Scheduled file:', p.safe_diagnostic(json.dumps(dict(timed)), config['META_ACCESS_TOKEN']))
             rows = db.execute('SELECT id,status,attempts,error,permalink FROM items '
                               'WHERE account=? ORDER BY created', (config['INSTAGRAM_ACCOUNT_ID'],)).fetchall()
         for row in rows:
@@ -319,13 +381,14 @@ def main(argv=None):
         with log.open('a', encoding='utf-8', buffering=1) as stream, \
                 redirect_stdout(stream), redirect_stderr(stream):
             print('\nWorker started:', now.astimezone(TZ).isoformat())
+            print('Windows user:', getpass.getuser(), '| Python:', sys.executable, flush=True)
             try:
-                return run_live(config, options, now)
+                return run_single_worker(config, options, now)
             except Exception as exc:
                 message = str(exc) if isinstance(exc, p.PushError) else type(exc).__name__
                 print('ERROR:', p.safe_diagnostic(message, config['META_ACCESS_TOKEN']))
                 return 1
-    return run_live(config, options, now)
+    return run_single_worker(config, options, now)
 
 
 if __name__ == '__main__':

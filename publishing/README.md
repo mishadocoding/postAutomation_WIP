@@ -1,5 +1,73 @@
 # Push a finished video to Instagram from this PC
 
+## Scheduler-driven finished-file posts
+
+An explicitly scheduled finished video runs through the existing background
+worker in either schedule mode. Registering it copies the video and caption into
+local state and makes no Meta requests:
+
+```powershell
+python .\automation.py schedule-file --video .\video.mp4 --caption-file .\caption.txt --at "2026-11-15T14:44:00+05:00"
+python .\automation.py status
+```
+
+Use a future time. Keep the already-installed task running; no foreground
+publisher is needed. The worker publishes on its first poll at/after the target,
+inside the configured catch-up window. This path publishes a supplied finished
+file, with no generation or visual-review loop. It does not release maintenance,
+change the daily generation schedule, or reuse past failed generation slots.
+
+Scheduled files stay out of the legacy daily FIFO. SHA-256 checks, publisher
+state reconciliation and bounded attempts protect against repeat posting. The
+worker records its user, Python executable, PID and target in `execution` on the
+publisher job; `scheduled_files` in the queue database records execution and
+completion. A pre-existing manual publication is reconciled without being
+labelled a new worker publication. Completion/held notifications are recorded.
+
+Separate task copies share a worker lock. Polls within the same configured
+interval are coalesced; logs say `Duplicate poll in this interval` instead of
+performing the workflow twice. This does not delete task registrations.
+
+On November 15 the 14:44 scheduler-only test, item `174bade3fa32`, was claimed by
+the background worker at 14:44:00 and publication was confirmed at 14:44:36
+Tashkent: https://www.instagram.com/reel/DfwfMsjk7eF/. The publisher execution
+record identifies Elyor, `pythonw.exe`, PID 3592 and `scheduled_file_worker`.
+Its success notification is recorded. This proves scheduler-driven publication
+of a supplied finished file; it does not prove unattended AI generation/review.
+A different approved, unposted MacBook order/stock video is queued for 15:00
+the same day, item `918ea739dc34`. The daily 18:00 target remains unchanged.
+
+## Network diagnostics and recovery
+
+Run this from the same signed-in Windows account used to install the task:
+
+```powershell
+python .\network_check.py
+python .\push_reel.py --check-account
+```
+
+The diagnostic sends credential-free GET requests to the Graph and upload hosts,
+records the actual Windows identity and Python executable, and saves its report
+to ignored `.state/network/latest.json`. A received HTTP response, including an
+error response, establishes HTTP reachability only; it does not prove account
+permissions or upload success. The account check is separate and also read-only.
+No generation, upload or publication is attempted by either command.
+
+Windows error 10013 / errno 13 identifies operating-system access denial for that
+process. DNS, TLS and timeout failures have different categories. A restriction
+on the Codex sandbox account does not establish that the normal scheduled user
+has the same restriction. The worker log now includes its username and Python
+executable to make that distinction visible. Do not disable TLS verification or
+change firewall rules based solely on a failed sandbox request.
+
+Temporary transport failures on GET requests receive at most three attempts,
+with one- and three-second delays. Access denial, certificate errors and HTTP
+authentication errors are not retried this way. POST requests, including file
+upload and publication, are never blindly retried by this transport layer:
+the existing saved-state reconciliation remains responsible for their recovery.
+The worker can resume an approved candidate after a network failure within its
+scheduled publication window.
+
 ## Recovery validation
 
 Scheduled generation and publication resumed after the November 15 test project
